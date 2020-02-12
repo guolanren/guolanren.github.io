@@ -38,7 +38,7 @@
               <p class="site-description motion-element" itemprop="description">{{ site.signature }}</p>
            {% else %}
               {% for description in site.descriptions %}
-                <p class="site-description motion-element" itemprop="description">{{ descriptions }}</p>
+                <p class="site-description motion-element" itemprop="description" style="white-space: pre-line">{{ description }}</p>
               {% endfor %}
           {% endif %}
         </div>
