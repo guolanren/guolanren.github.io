@@ -6,7 +6,10 @@
 # Site
 title: found
 subtitle: guolanren's blog
-description: 去发现有趣的东西，记下所看到的、学到的、想到的，然后去发现更有趣的东西...
+description: >- # this means to ignore newlines until "author:"
+  去发现有趣的东西,
+  记下所看到的、学到的、想到的,
+  然后去发现更有趣的东西...
 author: guolanren
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
 language: zh-Hans
