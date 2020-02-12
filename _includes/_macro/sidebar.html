@@ -37,7 +37,9 @@
            {% if site.seo %}
               <p class="site-description motion-element" itemprop="description">{{ site.signature }}</p>
            {% else %}
-              <p class="site-description motion-element" itemprop="description">{{ site.description }}</p>
+              {% for description in site.descriptions %}
+                <p class="site-description motion-element" itemprop="description">{{ descriptions }}</p>
+              {% endfor %}
           {% endif %}
         </div>
         <nav class="site-state motion-element">
