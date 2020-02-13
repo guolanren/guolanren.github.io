@@ -37,10 +37,8 @@
            {% if site.seo %}
               <p class="site-description motion-element" itemprop="description">{{ site.signature }}</p>
            {% else %}
-              {% for description in site.descriptions %}
-                <p class="site-description motion-element" itemprop="description" style="white-space: pre-line">{{ description }}</p>
-              {% endfor %}
-          {% endif %}
+              <p class="site-description motion-element" itemprop="description">{{ site.description }}</p>
+           {% endif %}
         </div>
         <nav class="site-state motion-element">
 
@@ -102,7 +100,7 @@
               <span class="links-of-author-item">
                 <a href="{{ link }}" target="_blank" title="{{ name }}">
                   {% if site.social_icons.enable %}
-                    <i class="fa fa-fw fa-{{ site.social_icons[name] | default: 'globe' | downcase }}"></i>
+                    <i class="fa fa-{{ site.social_icons[name] | default: 'globe' | downcase }}"></i>
                   {% endif %}
                   {{ name }}
                 </a>
