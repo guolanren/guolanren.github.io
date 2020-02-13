@@ -378,6 +378,9 @@ han: false
 # Swiftype Search API Key
 #swiftype_key:
 
+# See: https://ziyuan.baidu.com/site/
+baidu_site_verification: IljwggZ7aJ
+
 # Baidu Analytics ID
 baidu_analytics: 81558c0b324b2a7fe3bf09f79e802368
 
