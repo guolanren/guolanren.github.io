@@ -30,10 +30,11 @@ post:
   modified: 更新于
   sticky: 置顶
   posted: 发表于
-  in: 分类于
-  read_more: 阅读全文
+  in: 类别
+  tag: 标签
+  read_more: 有点意思
   untitled: 未命名
-  toc_empty: 此文章未包含目录
+  toc_empty: 此文章未收录
   visitors: 阅读次数
   wordcount: 字数统计
   min2read: 阅读时长

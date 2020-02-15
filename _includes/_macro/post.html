@@ -114,6 +114,33 @@
             </span>
           {% endif %}
 
+          {% if post.tags and post.tags.size > 0 and site.post_meta.tags %}
+          <span class="post-tags" >
+          {% if site.post_meta.created_at or site.post_meta.updated_at %}
+            <span class="post-meta-divider">|</span>
+          {% endif %}
+            <span class="post-meta-item-icon">
+              <i class="fa fa-folder-o"></i>
+            </span>
+            {% if site.post_meta.item_text %}
+              <span class="post-meta-item-text">{{ __.post.tag }}</span>
+            {% endif %}
+            {% for tag in post.tags %}
+              {% assign tag_url_encode = tag | url_encode | replace: '+', '%20' %}
+              <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                <a href="{{ '/tag/#/' | relative_url | append: tag_url_encode }}" itemprop="url" rel="index">
+                  <span itemprop="name">{{ tag }}</span>
+                </a>
+              </span>
+
+              {% assign tag_length = post.tags.size %}
+              {% if tag_length > 1 and forloop.index != tag_length %}
+                {{ __.symbol.comma }}
+              {% endif %}
+            {% endfor %}
+          </span>
+        {% endif %}
+
           {% if post.comments %}
             {% if site.duoshuo_shortname or site.duoshuo and site.duoshuo.shortname %}
               <span class="post-comments-count">
