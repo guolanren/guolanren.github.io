@@ -6,7 +6,7 @@
 # Site
 title: found
 subtitle: guolanren's blog
-descriptions: >- # this means to ignore newlines until "author:"
+description: >- # this means to ignore newlines until "author:"
   去发现有趣的东西，
   记下所看到的、学到的、想到的，
   然后去发现更有趣的东西...
@@ -14,6 +14,7 @@ author: guolanren
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
 language: zh-Hans
 date_format: '%Y-%m-%d'
+repository: guolanren/guolanren.github.io
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com' and baseurl as '/child'
