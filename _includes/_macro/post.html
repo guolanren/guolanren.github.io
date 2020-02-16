@@ -281,13 +281,13 @@
             </div>
           {% endif %}
 
-          {% unless site.excerpt_description and is_index %}
+          {% if site.post_meta.description and is_index %}
             {% if site.description %}
                 <div class="post-description">
                     {{ post.description }}
                 </div>
             {% endif %}
-          {% endunless %}
+          {% endif %}
 
         </div>
       </header>

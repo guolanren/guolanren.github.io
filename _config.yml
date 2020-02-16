@@ -320,7 +320,8 @@ post_meta:
   created_at: true
   updated_at: true
   categories: true
-  tags:       true
+  tags: true
+  description: false
 
 # Post wordcount display settings
 post_wordcount:
