@@ -30,4 +30,8 @@ th {
   font-weight: $table-th-font-weight;
 }
 
-td { border-bottom-width: 1px; }
+td { 
+  border-bottom-width: 1px;
+  overflow: overlay;
+  white-space: pre;
+}
