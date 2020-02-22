@@ -5,7 +5,7 @@ table {
   border-spacing: 0;
   border: 1px solid $table-border-color;
   font-size: $table-font-size;
-  table-layout: fixed;
+  table-layout: auto;
   word-wrap: break-all;
 }
 table>tbody>tr {
@@ -32,6 +32,6 @@ th {
 
 td { 
   border-bottom-width: 1px;
-  overflow: overlay;
+  overflow: hidden;
   white-space: pre;
 }
