@@ -17,7 +17,7 @@ typora-root-url: ..
 
 ## RDB
 
-RDB 某一个时间点的快照，备份和灾难恢复。
+RDB 某一个时间点的快照，备份和灾难恢复。dump.rdb
 
 默认开启
 
@@ -43,7 +43,45 @@ bgsave 使用后台子进程转储，非阻塞 临时存储 temp-{bgsave-pid}.rd
 
 ## AOF
 
-AOF 写入操作日志，服务器启动时重放
+AOF 写入操作日志，服务器启动时重放 
+
+收到会改变内存数据的写入命令，将命令追加到 AOF 文件。
+
+维护一个缓冲区，命令先往这个缓冲区写。通过 Linux 调用 fsync() 完成，阻塞调用
+
+
+
+appendonly.aof
+
+默认关闭
+
+RESP
+
+### 配置 
+
+appendfsync 调整 fsync 频率  always | everysec(默认) | no
+
+appendonly
+
+appendfilename
+
+auto-aof-rewrite-min-size
+
+auto-aof-rewrite-percentage
+
+### 重写
+
+BGREWRITEAOF
+
+AOF  重写 （AOF rewrite） 来压缩 AOF 文件; 主进程 创建子进程重写
+
+子进程创建后， 主进程将写命令写到 aof_rewrite_buf_blocks 的 aof_rewrite_buf_blocks 缓冲区。子进程完成重写后，主进程会将缓冲区命令写入到 新的AOF文件，写复制， 覆盖旧 AOF
+
+### 修复
+
+redis-check-aof --fix appendonly.aof
+
+
 
 ## 信息
 
