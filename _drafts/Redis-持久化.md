@@ -23,7 +23,7 @@ RDB 某一个时间点的快照，备份和灾难恢复。dump.rdb
 
 ### 配置
 
-save 900 1 (900 秒内有超过 1 个键发生改变，会进行一次 RDB 快照)
+save 900 1 (距上一次快照时间的 900 秒内有超过 1 个键发生改变，会进行一次 RDB 快照)触发 BGSAVE
 
 save 300 10
 
@@ -39,7 +39,11 @@ rdbchecksum yes: 快照文件末尾创建一个 CRC64 校验和。保存和加�
 
 save 使用主线程同步转储，阻塞
 
-bgsave 使用后台子进程转储，非阻塞 临时存储 temp-{bgsave-pid}.rdb 文件，完成后重命名 dbfilename 覆盖旧文件
+bgsave 使用后台子进程转储，非阻塞 临时存储 temp-{bgsave-pid}.rdb 文件，完成后重命名 dbfilename 覆盖旧文件,调用fork 创建子进程 
+
+收到 shutdown 命令会 SAVE
+
+sync 复制时，master BGSAVE
 
 ## AOF
 
@@ -61,7 +65,7 @@ RESP
 
 appendfsync 调整 fsync 频率  always | everysec(默认) | no
 
-appendonly
+appendonly yes | no
 
 appendfilename
 
@@ -86,6 +90,18 @@ redis-check-aof --fix appendonly.aof
 ## 信息
 
 ​	info persistence
+
+
+
+## RDB AOF 结合使用
+
+意外停机时的数据丢失、保存数据时的性能开销，持久化文件的大小，数据恢复的速度
+
+RDB 两次快照间的数据可能丢失，恢复数据快
+
+AOF 磁盘空间占用大
+
+aof-use-rdb-preample yes| no
 
 ## 参考
 
