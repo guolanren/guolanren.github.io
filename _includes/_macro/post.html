@@ -132,7 +132,8 @@
 
               {% assign tag_length = post.tags.size %}
               {% if tag_length > 1 and forloop.index != tag_length %}
-                {{ __.symbol.comma }}
+                <!-- 标签间逗号分隔 -->
+                <!-- {{ __.symbol.comma }} -->
               {% endif %}
             {% endfor %}
           </span>
