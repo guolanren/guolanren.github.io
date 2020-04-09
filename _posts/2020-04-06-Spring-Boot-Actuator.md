@@ -1,6 +1,6 @@
 ---
 title: Spring-Boot-Actuator
-description: 当应用程序投入生产时，可以使用 Spring Boot Actuator 来监视和管理。它提供了 HTTP 端点和 JMX 来管理和监视应用程序。审计，运行状况和指标收集也可以自动应用于应用程序。
+description: 当应用程序投入生产时，可以使用 Spring Boot Actuator 来监视和管理。它提供了 HTTP 端点和 JMX 来管理和监视应用程序。
 categories: 
  - code
 tags:
@@ -9,11 +9,9 @@ tags:
  - actuator
 ---
 
-------
-
 ## 概述
 
-​	当应用程序投入生产时，可以使用 [Spring Boot Actuator](<https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html>) 来监视和管理。它提供了 **HTTP** 端点和 **JMX** 来管理和监视应用程序。审计，运行状况和指标收集也可以自动应用于应用程序。
+​	当应用程序投入生产时，可以使用 [Spring Boot Actuator](<https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-features.html>) 来监视和管理。它提供了 **HTTP** 端点和 **JMX** 来管理和监视应用程序。
 
 ## 依赖
 
@@ -26,7 +24,7 @@ tags:
 
 ## 端点
 
-​	通常选择使用 **HTTP** 端点。下面会列举一系列的 **ID** ，它们默认前缀是 `/actuator`。
+​	通常选择使用 **HTTP** 端点。下面会列举一系列的端点，它们默认前缀是 `/actuator`。
 
 ### 通用
 
@@ -52,7 +50,7 @@ tags:
 | shutdown         | Lets the application be gracefully shutdown. Disabled by default. |
 | threaddump       | Performs a thread dump.                                      |
 
-### web相关
+### web
 
 | ID         | **Description**                                              |
 | ---------- | ------------------------------------------------------------ |
@@ -60,6 +58,40 @@ tags:
 | jolokia    | Exposes JMX beans over HTTP (when Jolokia is on the classpath, not available for WebFlux). Requires a dependency on `jolokia-core`. |
 | logfile    | Returns the contents of the logfile (if `logging.file.name` or `logging.file.path` properties have been set). Supports the use of the HTTP `Range` header to retrieve part of the log file’s content. |
 | prometheus | Exposes metrics in a format that can be scraped by a Prometheus server. Requires a dependency on `micrometer-registry-prometheus`. |
+
+### 详情
+
+​	关于更多 **Actuator** 的端点信息，可以参考[官方 API 文档](<https://docs.spring.io/spring-boot/docs/2.2.6.RELEASE/actuator-api//html/>)。
+
+### 暴露
+
+​	端点可能包含一些敏感信息，需要小心谨慎暴露，下面给出默认暴露的内建端点。
+
+| ID               | JMX  | Web  |
+| :--------------- | :--- | :--- |
+| auditevents      | Yes  | No   |
+| beans            | Yes  | No   |
+| caches           | Yes  | No   |
+| conditions       | Yes  | No   |
+| configprops      | Yes  | No   |
+| env              | Yes  | No   |
+| flyway           | Yes  | No   |
+| health           | Yes  | Yes  |
+| heapdump         | N/A  | No   |
+| httptrace        | Yes  | No   |
+| info             | Yes  | Yes  |
+| integrationgraph | Yes  | No   |
+| jolokia          | N/A  | No   |
+| logfile          | N/A  | No   |
+| loggers          | Yes  | No   |
+| liquibase        | Yes  | No   |
+| metrics          | Yes  | No   |
+| mappings         | Yes  | No   |
+| prometheus       | N/A  | No   |
+| scheduledtasks   | Yes  | No   |
+| sessions         | Yes  | No   |
+| shutdown         | Yes  | No   |
+| threaddump       | Yes  | No   |
 
 ## Example
 
