@@ -7,6 +7,7 @@ tags:
  - spring boot
  - spring boot example
  - actuator
+updated: 2020-04-10
 ---
 
 ## 概述
@@ -59,10 +60,6 @@ tags:
 | logfile    | Returns the contents of the logfile (if `logging.file.name` or `logging.file.path` properties have been set). Supports the use of the HTTP `Range` header to retrieve part of the log file’s content. |
 | prometheus | Exposes metrics in a format that can be scraped by a Prometheus server. Requires a dependency on `micrometer-registry-prometheus`. |
 
-### 详情
-
-​	关于更多 **Actuator** 的端点信息，可以参考[官方 API 文档](<https://docs.spring.io/spring-boot/docs/2.2.6.RELEASE/actuator-api//html/>)。
-
 ### 暴露
 
 ​	端点可能包含一些敏感信息，需要小心谨慎暴露，下面给出默认暴露的内建端点。
@@ -92,6 +89,63 @@ tags:
 | sessions         | Yes  | No   |
 | shutdown         | Yes  | No   |
 | threaddump       | Yes  | No   |
+
+### 详情
+
+​	关于更多 **Actuator** 的端点信息，可以参考[官方 API 文档](<https://docs.spring.io/spring-boot/docs/2.2.6.RELEASE/actuator-api//html/>)。
+
+## health
+
+### 自定义 HealthIndicator
+
+```java
+@Component
+public class MyHealthIndicator implements HealthIndicator {
+
+    @Override
+    public Health health() {
+        // perform some specific health check
+        int errorCode = check();
+        if (errorCode != 0) {
+            return Health.down().withDetail("Error Code", errorCode).build();
+        }
+        return Health.up().build();
+    }
+
+    public int check() {
+        return new Random().nextInt(2);
+    }
+}
+```
+
+### 自定义 ReactiveHealthIndicator
+
+```java
+@Component
+public class MyReactiveHealthIndicator implements ReactiveHealthIndicator {
+
+    @Override
+    public Mono<Health> health() {
+        //perform some specific health check that returns a Mono<Health>
+        return doHealthCheck(new Health.Builder())
+                .onErrorResume(ex -> Mono.just(new Health.Builder().down(ex).build()));
+    }
+
+    private Mono<Health> doHealthCheck(Health.Builder builder) {
+        return Mono.fromSupplier(() -> {
+            int errorCode = check();
+            if (errorCode != 0) {
+                return Health.down().withDetail("Error Code", errorCode).build();
+            }
+            return Health.up().build();
+        });
+    }
+
+    public int check() {
+        return new Random().nextInt(2);
+    }
+}
+```
 
 ## Example
 
