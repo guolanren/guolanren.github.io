@@ -153,7 +153,7 @@ static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
 
 ### DEFAULT_LOAD_FACTOR
 
-默认负载因子 **0.75f**，数组元素
+默认负载因子 **0.75f**，当 **map** 的大小达到 **capacity * factory** 时，会使用 **resize()** 进行扩容。
 
 - 为什么需要负载因子？
 
