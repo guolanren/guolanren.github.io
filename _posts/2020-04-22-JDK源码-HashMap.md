@@ -20,9 +20,9 @@ tags:
 
 ​	**Node** 的子类。当 **key** 不相等，但哈希冲突时，节点会以链表的形式，挂在数组上。
 
-​	一旦链表通过添加节点，长度大于等于 [TREEIFY_THRESHOLD(8)](#TREEIFY_THRESHOLD) 时，在 [resize()](#resize()) 时会触发 [treeifyBin(Node<K,V>[] tab, int hash)](#treeifyBin(Node<K,V>[] tab, int hash))，链表可能会转成红黑树。
+​	一旦链表通过添加节点，长度大于等于 **TREEIFY_THRESHOLD(8)** 时，在 **resize()** 时会触发 **treeifyBin(Node<K,V>[] tab, int hash)**，链表可能会转成红黑树。
 
-​	红黑树通过移除节点，长度小于等于 [UNTREEIFY_THRESHOLD(6)](#UNTREEIFY_THRESHOLD) 时，在 [resize()](#resize()) 时会触发 [untreeify(map)]()，红黑树会转成链表。
+​	红黑树通过移除节点，长度小于等于 **UNTREEIFY_THRESHOLD(6)** 时，在 **resize()** 时会触发 **untreeify(HashMap<K,V> map)**，红黑树会转成链表。
 
 ### 	table
 
@@ -66,7 +66,7 @@ transient Node<K,V>[] table;
 
 ## 初始化
 
-​	初始化时，仅仅是对大小和[负载因子](#DEFAULT_LOAD_FACTOR)进行设置，底层数组并不分配空间。只有在第一次插入元素时，才会对数组进行初始化 [resize()](#resize())。
+​	初始化时，仅仅是对**大小**和**负载因子**进行设置，底层数组并不分配空间。只有在第一次插入元素时，才会对数组进行初始化 **resize()**。
 
 ```java
 /**
@@ -142,7 +142,7 @@ public HashMap(Map<? extends K, ? extends V> m) {
 
 - 为什么必须是 **2** 的幂？
 
-  **HashMap** 在存储时，会使用 [hash(Object key)](#hash(Object key)) 根据 **Key** 的 **hashcode** 计算出最终的哈希值。最后使用 **i = (n - 1) & hash** 计算出索引值。**(n - 1)** 的结果正好相当于一个**低位掩码**，在进行 **&(与)** 时，可以让索引尽可能地分布均匀。
+  **HashMap** 在存储时，会使用 **hash(Object key)** 根据 **Key** 的 **hashcode** 计算出最终的哈希值。最后使用 **i = (n - 1) & hash** 计算出索引值。**(n - 1)** 的结果正好相当于一个**低位掩码**，在进行 **&(与)** 时，可以让索引尽可能地分布均匀。
 
 ```java
 /**
@@ -170,7 +170,7 @@ static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
 ### MIN_TREEIFY_CAPACITY
 
-链转树最小容量 **64**，当触发 [treeifyBin(Node<K,V>[] tab, int hash)](#treeifyBin(Node<K,V>[] tab, int hash))，会先判断数组长度是否达到 **64**，再决定链转树还是扩容。
+链转树最小容量 **64**，当触发 **treeifyBin(Node<K,V>[] tab, int hash)**，会先判断数组长度是否达到 **64**，再决定链转树还是扩容。
 
 ```java
 /**
@@ -184,7 +184,7 @@ static final int MIN_TREEIFY_CAPACITY = 64;
 
 ### TREEIFY_THRESHOLD
 
-链转树链长度的阈值 **8**。当链表长度大于等于 **8**，会触发 [treeifyBin(Node<K,V>[] tab, int hash)](#treeifyBin(Node<K,V>[] tab, int hash))。
+链转树链长度的阈值 **8**。当链表长度大于等于 **8**，会触发 **treeifyBin(Node<K,V>[] tab, int hash)**。
 
 ```java
 /**
@@ -200,7 +200,7 @@ static final int TREEIFY_THRESHOLD = 8;
 
 ### UNTREEIFY_THRESHOLD
 
-树转链树大小的阈值 **6**。在 [split(HashMap<K,V> map, Node<K,V>[] tab, int index, int bit)](#split(HashMap<K,V> map, Node<K,V>[] tab, int index, int bit)) 时，当遇到树大小小于等于 **6**，会触发 [untreeify(HashMap<K,V> map)]()。
+树转链树大小的阈值 **6**。在 **split(HashMap<K,V> map, Node<K,V>[] tab, int index, int bit)** 时，当遇到树大小小于等于 **6**，会触发 **untreeify(HashMap<K,V> map)**。
 
 ```java
 /**
@@ -228,13 +228,13 @@ static final int hash(Object key) {
 
   首先，**map** 存储的键值对总数一般不会大于 **2<sup>16</sup>(65536)**。在使用 **i = (n - 1) & hash** 计算索引时你的 **hashcode** 设计不合理的情况下，一旦低位出现大量一致，就会哈希冲突。使用高位特征与低位特征，计算出来的结果尽可能地让每一位的变化都能够对最终结果产生影响。
 
-- 为什么不用 **&** 或 **|** 而用 **^** ？
+- 为什么不用 **&** 或 **\|** 而用 **^** ？
 
-  **&** 容易让结果偏向 **0**；**|** 容易让结果偏向 **1**
+  **&** 容易让结果偏向 **0**；**\|** 容易让结果偏向 **1**
 
 - 为什么 **i = (n - 1) & hash** 要 **n - 1** ？
 
-  **map** 的容量都是 **2** 的幂，这种情况下的二进制形式，举 **2<sup>4</sup>(16)**为例：
+  **map** 的容量都是 **2** 的幂，这种情况下的二进制形式，举 **2<sup>4</sup>(16)** 为例：
 
   ```
   0000 0000 0000 0000 0000 0000 0001 0000
@@ -244,7 +244,7 @@ static final int hash(Object key) {
 
 ### putVal()
 
-添加键值对(key, value 均可为 null)，返回被覆盖的值。
+添加键值对(**key**, **value** 均可为 **null**)，返回被覆盖的值。
 
 ```java
 final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
@@ -437,7 +437,7 @@ final Node<K,V>[] resize() {
 
 ### split(HashMap<K,V> map, Node<K,V>[] tab, int index, int bit)
 
-将红黑树分为高低位两棵树，插入到对应的桶
+将红黑树分为高低位两棵树，插入到对应的桶。
 
 ```java
 final void split(HashMap<K,V> map, Node<K,V>[] tab, int index, int bit) {
@@ -524,7 +524,7 @@ final void split(HashMap<K,V> map, Node<K,V>[] tab, int index, int bit) {
 
 ### treeifyBin(Node<K,V>[] tab, int hash)
 
-对指定 **hash** 的链表转换成红黑树结构
+对指定 **hash** 的链表转换成红黑树结构。
 
 ```java
 final void treeifyBin(Node<K,V>[] tab, int hash) {
