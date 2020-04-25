@@ -6,6 +6,7 @@ categories:
 tags:
  - JDK源码
  - Map
+updated: 2020-04-25
 ---
 
 ------
@@ -555,4 +556,43 @@ final void treeifyBin(Node<K,V>[] tab, int hash) {
     }
 }
 ```
+
+## 相较于 JDK 7 的改进
+
+### Entry -> Node
+
+节点从 **Entry** 改为 **Node(TreeNode)**，链表长度达到阈值时，支持转换成红黑树。
+
+### 扰动函数
+
+扰动函数在 JDK 7 时的实现：
+
+```java
+final int hash(Object k) {
+    int h = hashSeed;
+    if (0 != h && k instanceof String) {
+        return sun.misc.Hashing.stringHash32((String) k);
+    }
+    h ^= k.hashCode();
+    h ^= (h >>> 20) ^ (h >>> 12);
+    return h ^ (h >>> 7) ^ (h >>> 4);
+}
+```
+
+JDK 8 只做了一次高低位异或，而其实这样已经可以得到一个不错的散列值了，没必要多做几次。
+
+### 头插法 -> 尾插法
+
+JDK 7 插入新节点时使用 **new Entry<>(hash, key, value, e)**
+
+```java
+Entry(int h, K k, V v, Entry<K,V> n) {
+    value = v;
+    next = n;
+    key = k;
+    hash = h;
+}
+```
+
+由此可见，新节点都会成为链表的首节点。在进行扩容时，JDK 7 的 **resize(int newCapacity)** 调用 **transfer(Entry[] newTable, boolean rehash)** 进行元素迁移。在多线程扩容情况下，头插法可能会导致死链，数据丢失(尾插法也救不了)等问题。大多数情况下，直接使用 **ConcurrentHashMap** 替代 **HashMap**，性能相差并不大，而且能够保证线程安全。
 
