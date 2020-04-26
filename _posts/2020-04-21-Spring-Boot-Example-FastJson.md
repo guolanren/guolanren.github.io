@@ -11,6 +11,10 @@ tags:
 
 ## FastJson
 
+### examples
+
+[Spring Boot Example FastJson](<https://github.com/guolanren/spring-boot-example/tree/master/fastjson>)
+
 ### releae note
 
 ### issue

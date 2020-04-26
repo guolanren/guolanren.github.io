@@ -11,6 +11,10 @@ tags:
 
 ## mybatis-curd
 
+### examples
+
+[Spring Boot Example MyBatis](<https://github.com/guolanren/spring-boot-example/tree/master/mybatis>)
+
 ### releae note
 
 1. **h2** 切换成 **mysql** 测试事务隔离性 -- **2020.04.17**
@@ -24,3 +28,4 @@ tags:
   切换成 **mysql**，配置生效，但无法初始化。
 
   配置 `spring.datasource.initialization-mode = always` 可以解决问题。
+
