@@ -68,4 +68,4 @@ OK
 
 ​	\[1\] [Redis 官方文档](<https://redis.io/topics/data-types-intro>)
 
-​	\[2\] [钱文品. Redis 深度历险：核心原理与应用实践. 应用 4：四两拨千斤——HyperLogLog](<https://book.douban.com/subject/30227261/>)
+​	\[2\] [钱文品. Redis 深度历险：核心原理与应用实践. 应用 4：四两拨千斤——HyperLogLog](<https://book.douban.com/subject/30386804/>)
