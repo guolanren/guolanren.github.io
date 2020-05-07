@@ -49,7 +49,7 @@ shell> zkServer.sh [start | start-foreground]
 ## 自启服务
 
 ```shell
-# 创建文件
+# 1. 创建文件
 $ vi /etc/init.d/zookeeper
 	#!/bin/sh
     export JAVA_HOME=/usr/java/jdk
