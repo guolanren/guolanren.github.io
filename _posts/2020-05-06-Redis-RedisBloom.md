@@ -11,7 +11,7 @@ tags:
 
 ## 前言
 
-​	**RedisBloom** 是 **Redis** 的一个概率数据类型模块，共提供了四种数据类型：**Bloom Filter**、**Cuckoo Filter**、**Count-Min-Sketch**、**Top-K**。其中，**Bloom** 和 **Cuckoo** 过滤器是用来推断(有一定的错误率)集合中是否存在某个 **item**。而 **Count-Min-Sketch** 以线性的内存空间估算出 **item** 数，**Top-K** 维护一个包含 **K** 个最频繁 **itme** 的列表。
+​	**RedisBloom** 是 **Redis** 的一个概率数据类型模块，共提供了四种数据类型：**Bloom Filter**、**Cuckoo Filter**、**Count-Min-Sketch**、**Top-K**。其中，**Bloom** 和 **Cuckoo** 过滤器是用来推断(有一定的错误率)集合中是否存在某个 **item**。而 **Count-Min-Sketch** 以线性的内存空间估算出 **item** 数，**Top-K** 维护一个包含 **K** 个最频繁 **item** 的列表。
 
 ## 使用
 
