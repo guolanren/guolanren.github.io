@@ -15,7 +15,7 @@ updated: 2020-04-25
 
 ### 	Node
 
-​	**map** 将键值对封装成 **Node** 进行存储，底层维护一个 **Node<K,V>[] table**。
+​	**HashMap** 将键值对封装成 **Node** 进行存储，底层维护一个 **Node<K,V>[] table**。
 
 ### 	TreeNode
 
@@ -27,7 +27,7 @@ updated: 2020-04-25
 
 ### 	table
 
-​	**map** 的底层数据结构。
+​	**HashMap** 的底层数据结构。
 
 ```java
 /**
@@ -93,7 +93,7 @@ public HashMap(int initialCapacity, float loadFactor) {
         throw new IllegalArgumentException("Illegal load factor: " +
                                            loadFactor);
     this.loadFactor = loadFactor;
-    // 计算出实际大小（大于等于 initialCapacity，且最小的 2 的幂的数）
+    // 计算出实际大小（大于等于 initialCapacity，且最小的 2 的幂数）
     this.threshold = tableSizeFor(initialCapacity);
 }
 
@@ -139,9 +139,9 @@ public HashMap(Map<? extends K, ? extends V> m) {
 
 ### DEFAULT_INITIAL_CAPACITY
 
-默认的初始化大小 **16**，必须是 **2** 的幂。
+默认的初始化大小 **16**，必须是 **2** 的幂数。
 
-- 为什么必须是 **2** 的幂？
+- 为什么必须是 **2** 的幂数？
 
   **HashMap** 在存储时，会使用 **hash(Object key)** 根据 **Key** 的 **hashcode** 计算出最终的哈希值。最后使用 **i = (n - 1) & hash** 计算出索引值。**(n - 1)** 的结果正好相当于一个**低位掩码**，在进行 **&(与)** 时，可以让索引尽可能地分布均匀。
 
@@ -154,7 +154,7 @@ static final int DEFAULT_INITIAL_CAPACITY = 1 << 4; // aka 16
 
 ### DEFAULT_LOAD_FACTOR
 
-默认负载因子 **0.75f**，当 **map** 的大小达到 **capacity * factory** 时，会使用 **resize()** 进行扩容。
+默认负载因子 **0.75f**，当 **HashMap** 的大小达到 **capacity * factory** 时，会使用 **resize()** 进行扩容。
 
 - 为什么需要负载因子？
 
@@ -227,7 +227,7 @@ static final int hash(Object key) {
 
 - 为什么不直接使用 **key** 的 **hashcode** ？
 
-  首先，**map** 存储的键值对总数一般不会大于 **2<sup>16</sup>(65536)**。在使用 **i = (n - 1) & hash** 计算索引时你的 **hashcode** 设计不合理的情况下，一旦低位出现大量一致，就会哈希冲突。使用高位特征与低位特征，计算出来的结果尽可能地让每一位的变化都能够对最终结果产生影响。
+  首先，**map** 存储的键值对总数一般不会大于 **2<sup>16</sup>(65536)**。在使用 **i = (n - 1) & hash** 计算索引时，你的 **hashcode** 设计不合理的情况下，一旦低位出现大量一致，就会哈希冲突。使用高位特征与低位特征，计算出来的结果尽可能地让每一位的变化都能够对最终结果产生影响。
 
 - 为什么不用 **&** 或 **\|** 而用 **^** ？
 
@@ -235,13 +235,13 @@ static final int hash(Object key) {
 
 - 为什么 **i = (n - 1) & hash** 要 **n - 1** ？
 
-  **map** 的容量都是 **2** 的幂，这种情况下的二进制形式，举 **2<sup>4</sup>(16)** 为例：
+  **map** 的容量都是 **2** 的幂数，这种情况下的二进制形式，举 **2<sup>4</sup>(16)** 为例：
 
   ```
   0000 0000 0000 0000 0000 0000 0001 0000
   ```
 
-  与这样的结果进行 **&(与)** ，得到的结果大机率是 **0**（即使前面的哈希值已结合高低位特征，尽可能的散列）。
+  与这样的结果进行 **&(与)** ，只能得到的两种结果（即使前面的哈希值已结合高低位特征，尽可能的散列）。
 
 ### putVal()
 
@@ -252,7 +252,6 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
     Node<K,V>[] tab; Node<K,V> p; int n, i;
     // 如果底层数组为空，使用 resize() 初始化
     if ((tab = table) == null || (n = tab.length) == 0)
-        // 初始化数组长度
         n = (tab = resize()).length;
     // 临时变量存储对应索引位头结点，如果桶位为空，直接插入
     if ((p = tab[i = (n - 1) & hash]) == null)
@@ -320,7 +319,7 @@ final V putVal(int hash, K key, V value, boolean onlyIfAbsent, boolean evict) {
 
 ### resize()
 
-初始化或双倍扩容数组。扩容之后，将原来 **Node** 插入新数组中(原索引位置或 **2** 的幂的偏移量索引位)。最后返回新数组。
+初始化或双倍扩容数组。扩容之后，将原来 **Node** 插入新数组中(原索引位置或 **2** 的幂数偏移量索引位)。最后返回新数组。
 
 ```java
 final Node<K,V>[] resize() {
@@ -337,14 +336,14 @@ final Node<K,V>[] resize() {
             // 返回原数组
             return oldTab;
         }
-        // 将新数组长度扩大 2 倍
+        // 将新数组长度扩大为旧数组的 2 倍
         // 如果新数组长度小于 HashMap 定义的最大容量，且原数组长度大于等于默认的初始化大小 16
         else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
                  oldCap >= DEFAULT_INITIAL_CAPACITY)
             // 新的阈值扩大为原阈值的 2 倍
             newThr = oldThr << 1; // double threshold
     }
-    // 初始化，如果构造 map 时指定了初始大小，阈值将根据初始大小，计算出实际大小（大于等于 initialCapacity，且最小的 2 的幂的数）
+    // 初始化，如果构造 HashMap 时指定了初始大小，阈值将根据初始大小，计算出实际大小（大于等于 initialCapacity，且最小的 2 的幂数）
     else if (oldThr > 0) // initial capacity was placed in threshold
         newCap = oldThr;
     // 初始化，如果没有指定初始化大小，使用默认大小
@@ -363,7 +362,7 @@ final Node<K,V>[] resize() {
         newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
                   (int)ft : Integer.MAX_VALUE);
     }
-    // 设置 map 阈值属性
+    // 设置 HashMap 阈值属性
     threshold = newThr;
     @SuppressWarnings({"rawtypes","unchecked"})
     // 使用新长度申请新数组
@@ -378,7 +377,7 @@ final Node<K,V>[] resize() {
             if ((e = oldTab[j]) != null) {
                 // 将原数组当前 Node 链表设置为空
                 oldTab[j] = null;
-                // 单独 Node 节点
+                // 如果是单独的 Node 节点
                 if (e.next == null)
                     // 当前 Node 移动到新数组的原索引位置或2的幂的偏移量索引位
                     newTab[e.hash & (newCap - 1)] = e;
@@ -386,7 +385,7 @@ final Node<K,V>[] resize() {
                 else if (e instanceof TreeNode)
                     // 进行树节点的插入
                     ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
-                // Node 链表，使用尾插法（保留原顺序）
+                // 否则就是 Node 链表，使用尾插法（保留原顺序）
                 else { // preserve order
                     Node<K,V> loHead = null, loTail = null;
                     Node<K,V> hiHead = null, hiTail = null;
@@ -540,7 +539,7 @@ final void treeifyBin(Node<K,V>[] tab, int hash) {
             // 将普通 Node 转成 TreeNode
             TreeNode<K,V> p = replacementTreeNode(e, null);
             if (tl == null)
-                // 设置将首节点
+                // 设置头节点
                 hd = p;
             else {
                 // 设置遍历的当前节点的上一个节点
