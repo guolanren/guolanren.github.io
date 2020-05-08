@@ -112,11 +112,11 @@ if (friends.mightContain(dude)) {
 
 ### 		[RedisBloom](<https://redisbloom.io/>)
 
-​	**RedisBloom** 是 **Redis** 的一个概率数据类型模块，共提供了四种数据类型：**Bloom Filter**、**Cuckoo Filter**、**Count-Min-Sketch**、**Top-K**。其中，**Bloom** 和 **Cuckoo** 过滤器是用来推断(有一定的错误率)集合中是否存在某个 **item**。而 **Count-Min-Sketch** 以线性的内存空间估算出 **item** 数，**Top-K** 维护一个包含 **K** 个最频繁 **item** 的列表。详情请参考[官方文档](<https://redisbloom.io/>)或[Redis-RedisBloom](<https://found.guolanren.online/code/2020/05/06/Redis-RedisBloom/>)
+​	**RedisBloom** 是 **Redis** 的一个概率数据类型模块，共提供了四种数据类型：**Bloom Filter**、**Cuckoo Filter**、**Count-Min-Sketch**、**Top-K**。其中，**Bloom** 和 **Cuckoo** 过滤器是用来推断(有一定的错误率)集合中是否存在某个 **item**。而 **Count-Min-Sketch** 以线性的内存空间估算出 **item** 数，**Top-K** 维护一个包含 **K** 个最频繁 **item** 的列表。详情请参考[官方文档](<https://redisbloom.io/>)或 [**Redis-RedisBloom**](<https://found.guolanren.online/code/2020/05/06/Redis-RedisBloom/>)。
 
 ## 删除支持
 
-​	传统的 **Bloom Filter** 不支持删除操作，而 [RedisBloom](<https://found.guolanren.online/code/2020/05/06/Redis-RedisBloom/>) 中的 **Cuckoo Filter** 支持删除。
+​	传统的 **Bloom Filter** 不支持删除操作，而 [**RedisBloom**](<https://found.guolanren.online/code/2020/05/06/Redis-RedisBloom/>) 中的 **Cuckoo Filter** 支持删除。
 
 ## 参考
 
