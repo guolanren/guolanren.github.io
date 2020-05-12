@@ -100,9 +100,54 @@ if (friends.mightContain(dude)) {
 }
 ```
 
+### [Redisson](<https://github.com/redisson/redisson/wiki/6.-%E5%88%86%E5%B8%83%E5%BC%8F%E5%AF%B9%E8%B1%A1#68-%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8bloom-filter>)
+
+​	**Redisson** 利用 **Redis** 实现了 **Java** 分布式[布隆过滤器（Bloom Filter）](http://static.javadoc.io/org.redisson/redisson/3.10.0/org/redisson/api/RBloomFilter.html)。所含最大比特数量为`2^32`。
+
+```java
+RBloomFilter<SomeObject> bloomFilter = redisson.getBloomFilter("sample");
+// 初始化布隆过滤器，预计统计元素数量为55000000，期望误差率为0.03
+bloomFilter.tryInit(55000000L, 0.03);
+bloomFilter.add(new SomeObject("field1Value", "field2Value"));
+bloomFilter.add(new SomeObject("field5Value", "field8Value"));
+bloomFilter.contains(new SomeObject("field1Value", "field8Value"));
+```
+
 ### 		[RedisBloom](<https://redisbloom.io/>)
 
 ​	**RedisBloom** 是 **Redis** 的一个概率数据类型模块，共提供了四种数据类型：**Bloom Filter**、**Cuckoo Filter**、**Count-Min-Sketch**、**Top-K**。其中，**Bloom** 和 **Cuckoo** 过滤器是用来推断(有一定的错误率)集合中是否存在某个 **item**。而 **Count-Min-Sketch** 以线性的内存空间估算出 **item** 数，**Top-K** 维护一个包含 **K** 个最频繁 **item** 的列表。详情请参考[官方文档](<https://redisbloom.io/>)或 [**Redis-RedisBloom**](<https://found.guolanren.online/code/2020/05/06/Redis-RedisBloom/>)。
+
+```java
+public class RedisBloomBF {
+
+    private Client client;
+
+    @Before
+    public void before() {
+        client = new Client("127.0.0.1", 6379);
+    }
+
+    @Test
+    public void testBloomFilter() {
+        for (long i = 0; i < 100_000_000L; i++) {
+            client.add("simpleBloom", Long.toString(i));
+        }
+        long count = 0;
+        for (long i = 0; i < 2 * 100_000_000L; i++) {
+            if (client.exists("simpleBloom", Long.toString(i))) {
+                count++;
+            }
+        }
+        System.out.println(count);
+    }
+}
+```
+
+## 粗略比较
+
+- `Guava`：虽然批量添加接口，但由于使用本地内存，可以快速构建过滤器。在分布式应用中，多个应用需要各自维护过滤器。一般场景下，对过滤器的一致性要求不高。
+- `Redisson`：基于 **Redis** 构建，没有提供批量添加的接口。如果需要构建大数据量的过滤器，需要很长时间。在分布式应用中可以共享过滤器。
+- **RedisBloom**：基于 **Redis** 构建，**Redis** 需要加载该模块。提供了批量添加的接口，相比 **Redisson**，可快速构建过滤器，但远远慢于 **Guava**。在分布式应用中可以共享过滤器。
 
 ## 删除支持
 
