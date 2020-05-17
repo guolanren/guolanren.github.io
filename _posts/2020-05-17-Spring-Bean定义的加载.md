@@ -1,6 +1,6 @@
 ---
 title: Spring-Bean定义的加载
-description: 
+description: 通常使用 Spring 开发，需要指定 spring 的配置文件，里面定义了开发中有可能需要用到的 Bean。Spring 通过 BeanDefinitionReader，读取配置文件，将 Bean(定义)加载到容器中。BeanDefinitionReader 支持 *.xml、*.properties、*.groovy 三种配置文件的读取。其中 xml 配置文件方式较为常见，下文将以 XmlBeanDefinitionReader 介绍 BeanDefinitionReader。
 categories: 
  - code
 tags:
@@ -12,11 +12,11 @@ tags:
 
 ## 前言
 
-​	通常使用 **Spring** 开发，需要指定 **spring** 的配置文件，里面定义了开发中有可能需要用到的 **Bean**。**Spring** 通过 `BeanDefinitionReader` ，读取配置文件，将 **Bean(定义)** 加载到容器中。`BeanDefinitionReader` 支持 **\*.xml**、**\*.properties**、**\*.groovy** 三种配置文件的读取。其中 **xml** 配置文件方式较为常见，下文将以 `XmlBeanDefinitionReader` 介绍 `BeanDefinitionReader`。
+​	通常使用 **Spring** 开发，需要指定 **spring** 的配置文件，里面定义了开发中有可能需要用到的 **Bean**。**Spring** 通过 `BeanDefinitionReader`，读取配置文件，将 **Bean(定义)** 加载到容器中。`BeanDefinitionReader` 支持 `*.xml`、`*.properties`、`*.groovy` 三种配置文件的读取。其中 **xml** 配置文件方式较为常见，下文将以 `XmlBeanDefinitionReader` 介绍 `BeanDefinitionReader`。
 
 ## 类图
 
-![BeanDefinitionReader]()
+![BeanDefinitionReader](https://github.com/guolanren/gallery/blob/master/found/2020-05-15-Spring-Bean%E5%AE%9A%E4%B9%89%E7%9A%84%E5%8A%A0%E8%BD%BD/BeanDefinitionReader.png?raw=true)
 
 ## Start
 
@@ -87,7 +87,7 @@ protected AbstractBeanDefinitionReader(BeanDefinitionRegistry registry) {
 
 ​	`Resource` 是 **Spring** 内部的资源抽象，封装了底层资源。**Spring** 提供了多种资源不同来源的实现，**File**、**Classpath**、**URL**、**ByteArray**...
 
-![Resource]()
+![Resource](https://github.com/guolanren/gallery/blob/master/found/2020-05-15-Spring-Bean%E5%AE%9A%E4%B9%89%E7%9A%84%E5%8A%A0%E8%BD%BD/Resource.png?raw=true)
 
 - `InputSource`
 
@@ -218,7 +218,7 @@ public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefin
             "IOException parsing XML document from " + encodedResource.getResource(), ex);
     }
     finally {
-        // 加载完毕，从正在被加载集合中移除
+        // 加载完毕，从正在被加载集合中移除。
         currentResources.remove(encodedResource);
         // 如果 currentResources 已经为空了，使用 ThreadLocal#remove() 移除，避免内存泄漏。
         if (currentResources.isEmpty()) {
@@ -237,7 +237,7 @@ public int loadBeanDefinitions(EncodedResource encodedResource) throws BeanDefin
 protected int doLoadBeanDefinitions(InputSource inputSource, Resource resource)
     throws BeanDefinitionStoreException {
     try {
-        // 解析 InputSource，加载 Document
+        // 解析 InputSource，加载 Document。
         Document doc = doLoadDocument(inputSource, resource);
         return registerBeanDefinitions(doc, resource);
     }
@@ -259,12 +259,12 @@ protected Document doLoadDocument(InputSource inputSource, Resource resource) th
  * org.springframework.beans.factory.xml.XmlBeanDefinitionReader
  */
 protected int getValidationModeForResource(Resource resource) {
-    // 如果手动设置了 xml 文件的验证模式，则使用手动的验证模式
+    // 如果手动设置了 xml 文件的验证模式，则使用手动的验证模式。
     int validationModeToUse = getValidationMode();
     if (validationModeToUse != VALIDATION_AUTO) {
         return validationModeToUse;
     }
-    // 解析配置文件，获取验证模式
+    // 解析配置文件，获取验证模式。
     int detectedMode = detectValidationMode(resource);
     if (detectedMode != VALIDATION_AUTO) {
         return detectedMode;
@@ -293,7 +293,7 @@ public Document loadDocument(InputSource inputSource, EntityResolver entityResol
 }
 ```
 
-### 使用 Document 注册 BeanDefinition
+### 解析 Document 标签
 
 ```java
 /**
@@ -356,10 +356,10 @@ protected void doRegisterBeanDefinitions(Element root) {
         // 获取 profile 属性。
         String profileSpec = root.getAttribute(PROFILE_ATTRIBUTE);
         if (StringUtils.hasText(profileSpec)) {
-            // profile 属性转数组。允许[,; ](逗号，分号，空格)分隔
+            // profile 属性转数组。允许[,; ](逗号，分号，空格)分隔。
             String[] specifiedProfiles = StringUtils.tokenizeToStringArray(
                 profileSpec, BeanDefinitionParserDelegate.MULTI_VALUE_ATTRIBUTE_DELIMITERS);
-            // 如果 Environment 不支持 profile，直接点过不加载。
+            // 如果 Environment 不支持 profile，直接跳过不加载。
             if (!getReaderContext().getEnvironment().acceptsProfiles(specifiedProfiles)) {
                 if (logger.isInfoEnabled()) {
                     logger.info("Skipped XML bean definition file due to specified profiles [" + profileSpec +
@@ -390,25 +390,207 @@ protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate d
         // 获取 Node 列表。
         NodeList nl = root.getChildNodes();
         for (int i = 0; i < nl.getLength(); i++) {
+            // 遍历 <beans> 下的子标签，<import>、<alias>、<bean>...
             Node node = nl.item(i);
+            // 如果是一个标签节点。
             if (node instanceof Element) {
                 Element ele = (Element) node;
+                // 默认标签解析。
                 if (delegate.isDefaultNamespace(ele)) {
                     parseDefaultElement(ele, delegate);
                 }
+                // 自定义标签解析。
                 else {
                     delegate.parseCustomElement(ele);
                 }
             }
         }
     }
+    // 自定义标签解析。
     else {
         delegate.parseCustomElement(root);
     }
 }
+
+/**
+ * org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader
+ */
+private void parseDefaultElement(Element ele, BeanDefinitionParserDelegate delegate) {
+    // <import> 标签。
+    if (delegate.nodeNameEquals(ele, IMPORT_ELEMENT)) {
+        // 使用对应的配置文件，加载 BeanDefinition。
+        // 如果存在配置文件循环 import, 前面 Resource 转 InputSource 会检测出来抛出异常。
+        importBeanDefinitionResource(ele);
+    }
+    // <alias> 标签解析。
+    else if (delegate.nodeNameEquals(ele, ALIAS_ELEMENT)) {
+        processAliasRegistration(ele);
+    }
+    // <bean> 标签解析。
+    else if (delegate.nodeNameEquals(ele, BEAN_ELEMENT)) {
+        // 处理 BeanDefinition 注册。
+        processBeanDefinition(ele, delegate);
+    }
+    // 内嵌 <beans> 标签解析。
+    else if (delegate.nodeNameEquals(ele, NESTED_BEANS_ELEMENT)) {
+        // recurse
+        // 递归注册 BeanDefinition。
+        doRegisterBeanDefinitions(ele);
+    }
+}
+
+/**
+ * org.springframework.beans.factory.xml.BeanDefinitionParserDelegate
+ */
+public BeanDefinition parseCustomElement(Element ele) {
+    return parseCustomElement(ele, null);
+}
+
+/**
+ * org.springframework.beans.factory.xml.BeanDefinitionParserDelegate
+ */
+public BeanDefinition parseCustomElement(Element ele, @Nullable BeanDefinition containingBd) {
+    String namespaceUri = getNamespaceURI(ele);
+    if (namespaceUri == null) {
+        return null;
+    }
+    // 自定义标签的命名空间处理器。
+    NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
+    if (handler == null) {
+        error("Unable to locate Spring NamespaceHandler for XML schema namespace [" + namespaceUri + "]", ele);
+        return null;
+    }
+    // 特定处理器解析特定标签。
+    return handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
+}
 ```
 
+### 注册 BeanDefinition
 
+```java
+/**
+ * org.springframework.beans.factory.xml.DefaultBeanDefinitionDocumentReader
+ */
+protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate delegate) {
+    // 根据 Element 构建出 BeanDefinitionHolder。
+    BeanDefinitionHolder bdHolder = delegate.parseBeanDefinitionElement(ele);
+    if (bdHolder != null) {
+        bdHolder = delegate.decorateBeanDefinitionIfRequired(ele, bdHolder);
+        try {
+            // Register the final decorated instance.
+            // 使用工具类 BeanDefinitionReaderUtils 注册 BeanDefinition。
+            BeanDefinitionReaderUtils.registerBeanDefinition(bdHolder, getReaderContext().getRegistry());
+        }
+        catch (BeanDefinitionStoreException ex) {
+            getReaderContext().error("Failed to register bean definition with name '" +
+                                     bdHolder.getBeanName() + "'", ele, ex);
+        }
+        // Send registration event.
+        getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
+    }
+}
 
-### 
+/**
+ * org.springframework.beans.factory.xml.BeanDefinitionParserDelegate
+ */
+public BeanDefinitionHolder parseBeanDefinitionElement(Element ele) {
+    return parseBeanDefinitionElement(ele, null);
+}
+
+/**
+ * org.springframework.beans.factory.xml.BeanDefinitionParserDelegate
+ */
+public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
+    // 获取 <bean> 的 id。
+    String id = ele.getAttribute(ID_ATTRIBUTE);
+    // 获取 <bean> 的 name。
+    String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
+
+    List<String> aliases = new ArrayList<>();
+    if (StringUtils.hasLength(nameAttr)) {
+        // 将 name 按合法分隔符分隔，作为 bean 的别名。
+        String[] nameArr = StringUtils.tokenizeToStringArray(nameAttr, MULTI_VALUE_ATTRIBUTE_DELIMITERS);
+        aliases.addAll(Arrays.asList(nameArr));
+    }
+
+    // id 才是 bean 的名字。
+    String beanName = id;
+    if (!StringUtils.hasText(beanName) && !aliases.isEmpty()) {
+        // 如果没有指定 id，将使用 name 中的第一个名字作为 id，并将收个 name 剔除别名列表。
+        beanName = aliases.remove(0);
+        if (logger.isDebugEnabled()) {
+            logger.debug("No XML 'id' specified - using '" + beanName +
+                         "' as bean name and " + aliases + " as aliases");
+        }
+    }
+
+    if (containingBean == null) {
+        checkNameUniqueness(beanName, aliases, ele);
+    }
+
+    // 构建 BeanDefinition。
+    AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
+    if (beanDefinition != null) {
+        // 如果 beanName 还是为空。
+        if (!StringUtils.hasText(beanName)) {
+            try {
+                if (containingBean != null) {
+                    beanName = BeanDefinitionReaderUtils.generateBeanName(
+                        beanDefinition, this.readerContext.getRegistry(), true);
+                }
+                // 如果 id 和 name 都没有指定，使用类的全限定类名加一个后缀作为 beanName。
+                else {
+                    beanName = this.readerContext.generateBeanName(beanDefinition);
+                    // Register an alias for the plain bean class name, if still possible,
+                    // if the generator returned the class name plus a suffix.
+                    // This is expected for Spring 1.2/2.0 backwards compatibility.
+                    String beanClassName = beanDefinition.getBeanClassName();
+                    if (beanClassName != null &&
+                        beanName.startsWith(beanClassName) && beanName.length() > beanClassName.length() &&
+                        !this.readerContext.getRegistry().isBeanNameInUse(beanClassName)) {
+                        aliases.add(beanClassName);
+                    }
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Neither XML 'id' nor 'name' specified - " +
+                                 "using generated bean name [" + beanName + "]");
+                }
+            }
+            catch (Exception ex) {
+                error(ex.getMessage(), ele);
+                return null;
+            }
+        }
+        String[] aliasesArray = StringUtils.toStringArray(aliases);
+        // 返回一个 BeanDefinition 持有器。
+        return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);
+    }
+
+    return null;
+}
+
+/**
+ * org.springframework.beans.factory.support.BeanDefinitionReaderUtils
+ */
+public static void registerBeanDefinition(
+    BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
+    throws BeanDefinitionStoreException {
+
+    // Register bean definition under primary name.
+    // 获取 BeanDefinitionHolder 中的 BeanName。
+    String beanName = definitionHolder.getBeanName();
+    // 往 BeanFactory 中注册 BeanDefinition。
+    // BeanFactory 维护一个 beanDefinitionMap，是一个ConcurrentHashMap，存放 BeanName 与 BeanDefinition 的映射关系。
+    registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
+
+    // Register aliases for bean name, if any.
+    String[] aliases = definitionHolder.getAliases();
+    if (aliases != null) {
+        for (String alias : aliases) {
+            // 往 BeanFactory 中注册该 Bean 的别名。
+            registry.registerAlias(beanName, alias);
+        }
+    }
+}
+```
 
