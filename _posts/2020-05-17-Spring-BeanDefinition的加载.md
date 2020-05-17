@@ -1,5 +1,5 @@
 ---
-title: Spring-Bean定义的加载
+title: Spring-BeanDefinition的加载
 description: 通常使用 Spring 开发，需要指定 spring 的配置文件，里面定义了开发中有可能需要用到的 Bean。Spring 通过 BeanDefinitionReader，读取配置文件，将 Bean(定义)加载到容器中。BeanDefinitionReader 支持 *.xml、*.properties、*.groovy 三种配置文件的读取。其中 xml 配置文件方式较为常见，下文将以 XmlBeanDefinitionReader 介绍 BeanDefinitionReader。
 categories: 
  - code
