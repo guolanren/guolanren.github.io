@@ -77,11 +77,11 @@ protected AbstractBeanDefinitionReader(BeanDefinitionRegistry registry) {
 
 ## 加载 BeanDefinition
 
-​	**Start** 中使用了两种方式加载：**1.** 直接指定配置文件路径。 **2.** 将配置文件封装成 `Resource`，在作为入参加载。
+​	**Start** 中使用了两种方式加载：**1.** 直接指定配置文件路径。 **2.** 将配置文件封装成 `Resource`，再作为入参加载。
 
 ### 概念
 
-​	在介绍如何加载 `BeanDefinition` 之前，有必要先介绍 `Resource`、`Document`。其实配置文件中的 **Bean** 定义不是直接就被读取、解析成 `BeanDefintion` 对象。`XmlBeanDefinitionReader` 的大致工序是：配置文件(`bean-definition-reader.xml`) -> `Resource` -> `InputSource` -> `Document` -> `BeanDefinition`。
+​	在介绍如何加载 `BeanDefinition` 之前，有必要先了解一下 `Resource`、`Document`。其实配置文件中的 **Bean** 定义不是直接就被读取、解析成 `BeanDefintion` 对象的。`XmlBeanDefinitionReader` 的大致工序是：配置文件(`bean-definition-reader.xml`) -> `Resource` -> `InputSource` -> `Document` -> `BeanDefinition`。
 
 - `Resource`
 
@@ -126,42 +126,42 @@ public int loadBeanDefinitions(String location, @Nullable Set<Resource> actualRe
 		if (resourceLoader instanceof ResourcePatternResolver) {
 			// Resource pattern matching available.
 			try {
-                  // 可以通过模式去匹配多个配置文件，封装成 Resource。
-				Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
-				// 使用重载方法，传入 Resources 加载 BeanDefinition。
-				int loadCount = loadBeanDefinitions(resources);
-				// actualResources 是一个存储了已经被处理过的 Resource 集合，可以用来指示调用者忽略那些 Resource。
-				if (actualResources != null) {
-					for (Resource resource : resources) {
-						actualResources.add(resource);
-					}
-				}
-				if (logger.isDebugEnabled()) {
-					logger.debug("Loaded " + loadCount + " bean definitions from location pattern [" + location + "]");
-				}
-				// 返回加载 BeanDefinition 的数量。
-				return loadCount;
-			}
-			catch (IOException ex) {
-				throw new BeanDefinitionStoreException(
+                // 可以通过模式去匹配多个配置文件，封装成 Resource。
+                Resource[] resources = ((ResourcePatternResolver) resourceLoader).getResources(location);
+                // 使用重载方法，传入 Resources 加载 BeanDefinition。
+                int loadCount = loadBeanDefinitions(resources);
+                // actualResources 是一个存储了已经被处理过的 Resource 集合，可以用来指示调用者忽略那些 Resource。
+                if (actualResources != null) {
+                    for (Resource resource : resources) {
+                        actualResources.add(resource);
+                    }
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Loaded " + loadCount + " bean definitions from location pattern [" + location + "]");
+                }
+                // 返回加载 BeanDefinition 的数量。
+                return loadCount;
+            }
+            catch (IOException ex) {
+                throw new BeanDefinitionStoreException(
 						"Could not resolve bean definition resource pattern [" + location + "]", ex);
-			}
-		}
-		// 如果 resourceLoader 不是 ResourcePatternResolver。
-		else {
-			// Can only load single resources by absolute URL.
-             // 这个解析器只能加载一个绝对路径 URL 资源。
-			Resource resource = resourceLoader.getResource(location);
-			int loadCount = loadBeanDefinitions(resource);
-			if (actualResources != null) {
-				actualResources.add(resource);
-			}
-			if (logger.isDebugEnabled()) {
-				logger.debug("Loaded " + loadCount + " bean definitions from location [" + location + "]");
-			}
-			return loadCount;
-		}
-	}
+            }
+        }
+    	// 如果 resourceLoader 不是 ResourcePatternResolver。
+    	else {
+            // Can only load single resources by absolute URL.
+            // 这个解析器只能加载一个绝对路径 URL 资源。
+            Resource resource = resourceLoader.getResource(location);
+            int loadCount = loadBeanDefinitions(resource);
+            if (actualResources != null) {
+                actualResources.add(resource);
+            }
+            if (logger.isDebugEnabled()) {
+                logger.debug("Loaded " + loadCount + " bean definitions from location [" + location + "]");
+            }
+            return loadCount;
+        }
+}
 ```
 
 ### Resource 转 InputSource
@@ -281,7 +281,7 @@ protected int getValidationModeForResource(Resource resource) {
  */
 public Document loadDocument(InputSource inputSource, EntityResolver entityResolver,
                              ErrorHandler errorHandler, int validationMode, boolean namespaceAware) throws Exception {
-	// 创建 DocumentBuilder 工厂。
+    // 创建 DocumentBuilder 工厂。
     DocumentBuilderFactory factory = createDocumentBuilderFactory(validationMode, namespaceAware);
     if (logger.isDebugEnabled()) {
         logger.debug("Using JAXP provider [" + factory.getClass().getName() + "]");
