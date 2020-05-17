@@ -25,15 +25,14 @@ tags:
 public class BeanFactoryStart {
     
     public static void main(String[] args) {
-		BeanFactory bf = new DefaultListableBeanFactory();
-		BeanDefinitionReader bdr = new XmlBeanDefinitionReader((BeanDefinitionRegistry) bf);
-         // 1. 使用 AbstractBeanDefinitionReader 的 loadBeanDefinitions(String location)
-		bdr.loadBeanDefinitions("classpath:bean-factory.xml");
-         // 2. 使用 XmlBeanDefinitionReader 重写后的 loadBeanDefinitions(Resource resource)
-		Resource resource = new ClassPathResource("bean-factory.xml");
-		bdr.loadBeanDefinitions(resource);
-	}
-
+        BeanFactory bf = new DefaultListableBeanFactory();
+        BeanDefinitionReader bdr = new XmlBeanDefinitionReader((BeanDefinitionRegistry) bf);
+        // 1. 使用 AbstractBeanDefinitionReader 的 loadBeanDefinitions(String location)
+        bdr.loadBeanDefinitions("classpath:bean-factory.xml");
+        // 2. 使用 XmlBeanDefinitionReader 重写后的 loadBeanDefinitions(Resource resource)
+        Resource resource = new ClassPathResource("bean-factory.xml");
+        bdr.loadBeanDefinitions(resource);
+    }
 }
 ```
 
