@@ -293,7 +293,7 @@ public Document loadDocument(InputSource inputSource, EntityResolver entityResol
 }
 ```
 
-### 解析 Document 标签
+### 解析 Document
 
 ```java
 /**
@@ -486,6 +486,7 @@ protected void processBeanDefinition(Element ele, BeanDefinitionParserDelegate d
                                      bdHolder.getBeanName() + "'", ele, ex);
         }
         // Send registration event.
+        // 发送注册事件，通知相关的监听器，这个 Bean 已经加载好了。
         getReaderContext().fireComponentRegistered(new BeanComponentDefinition(bdHolder));
     }
 }
@@ -528,7 +529,7 @@ public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable Be
         checkNameUniqueness(beanName, aliases, ele);
     }
 
-    // 构建 BeanDefinition。
+    // 进一步解析 BeanDefinition。
     AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
     if (beanDefinition != null) {
         // 如果 beanName 还是为空。
@@ -564,6 +565,67 @@ public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable Be
         String[] aliasesArray = StringUtils.toStringArray(aliases);
         // 返回一个 BeanDefinition 持有器。
         return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);
+    }
+
+    return null;
+}
+
+/**
+ * org.springframework.beans.factory.xml.BeanDefinitionParserDelegate
+ */
+public AbstractBeanDefinition parseBeanDefinitionElement(
+    Element ele, String beanName, @Nullable BeanDefinition containingBean) {
+
+    this.parseState.push(new BeanEntry(beanName));
+
+    String className = null;
+    // 解析 class 属性。
+    if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
+        className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
+    }
+    String parent = null;
+    // 解析 parent 属性。
+    if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
+        parent = ele.getAttribute(PARENT_ATTRIBUTE);
+    }
+
+    try {
+        AbstractBeanDefinition bd = createBeanDefinition(className, parent);
+
+        parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+        // 解析并获取 description。
+        bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
+
+        // 解析元数据。
+        parseMetaElements(ele, bd);
+        // 解析 lookup-method 属性。
+        parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+        // 解析 replaced-method 属性。
+        parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
+
+        // 解析构造器参数。
+        parseConstructorArgElements(ele, bd);
+        // 解析 property 子元素。
+        parsePropertyElements(ele, bd);
+        // 解析 qualifier 子元素。
+        parseQualifierElements(ele, bd);
+
+        bd.setResource(this.readerContext.getResource());
+        bd.setSource(extractSource(ele));
+
+        return bd;
+    }
+    catch (ClassNotFoundException ex) {
+        error("Bean class [" + className + "] not found", ele, ex);
+    }
+    catch (NoClassDefFoundError err) {
+        error("Class that bean class [" + className + "] depends on not found", ele, err);
+    }
+    catch (Throwable ex) {
+        error("Unexpected failure during bean definition parsing", ele, ex);
+    }
+    finally {
+        this.parseState.pop();
     }
 
     return null;
