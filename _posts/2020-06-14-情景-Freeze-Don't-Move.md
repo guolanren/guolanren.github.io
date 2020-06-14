@@ -2,7 +2,7 @@
 type: photo
 title: Freeze! Don't Move!
 photos:
-- https://github.com/guolanren/gallery/blob/master/found/2020-04-24-%E5%9C%B0%E6%96%B9-Channel/%E7%B2%AE%E4%BB%93%E5%B0%8F%E9%81%93.jpg?raw=true
+- https://github.com/guolanren/gallery/blob/master/found/2020-06-14-%E6%83%85%E6%99%AF-Freeze-Don't-Move/Freeze-Don't-Move.jpeg?raw=true
 categories:
  - 摄影
 tags:
