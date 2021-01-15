@@ -6,6 +6,7 @@ categories:
 tags:
  - jvm
  - jep
+
 ---
 
 ------
@@ -183,11 +184,7 @@ Error: A fatal exception has occurred. Program will exit.
 
 ### JDK 13 (动态 CDS Archives)
 
-​	...
-
-## 转储过程
-
-​	...
+​	**[JEP 350<sup>[5]</sup>](https://openjdk.java.net/jeps/350)** 支持了动态转储(**-Xshare:dump**为静态转储)。使用 **-XX:+UnlockDiagnosticVMOptions -XX:+AllowArchivingWithJavaAgent -XX:ArchiveClassesAtExit=simple.jsa** 虚拟机参数，可以在程序退出的时候，动态生成`shared archive`文件。
 
 ## 参考
 
