@@ -114,10 +114,9 @@ Updating references to shared objects ... done.
 
    这时的转储过程日志与之前有所不同了。
 
-   ```log
+   ```shell
    Allocated shared space: 37879808 bytes at 0x0000000800000000
    Loading classes to share ...
-   com/intellij/rt/execution/application/AppMainV2$1
    Preload Error: Failed to load com/intellij/rt/execution/application/AppMainV2$Agent
    Preload Error: Failed to load com/intellij/rt/execution/application/AppMainV2
    Preload Error: Failed to load com/intellij/rt/execution/application/AppMainV2$1
@@ -138,7 +137,7 @@ Updating references to shared objects ... done.
    mc space:     34053 [  0.6% of total] out of    131072 bytes [26.0% used] at 0x0000000802400000
    total   :   5946621 [100.0% of total] out of  37879808 bytes [15.7% used]
    ```
-
+   
 3. 使用生成的转储文件，启动程序，感受 **AppCDS**
 
    ```shell
